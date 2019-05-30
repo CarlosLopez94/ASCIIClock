@@ -1,14 +1,15 @@
 #include <iostream>
+#include <string>
+#include <list>
+#include <map>
 
-
-
-void loadDictionaryASCII();
-
+//Declare methods
+std::map<std::string, std::list<std::string>> loadDictionaryASCII();
 void printTimeASCII();
 
 int main(){
     //Init Load ASCII Dictionary
-    loadDictionaryASCII();
+    std::map<std::string, std::list<std::string>> dictionaryASCII = loadDictionaryASCII();
 
     int cont=10;
     while(cont!=0){
@@ -27,8 +28,8 @@ int main(){
     return 0;
 }
 
-void loadDictionaryASCII(){
-
+std::map<std::string, std::list<std::string>> loadDictionaryASCII(){
+    std::map<std::string, std::list<std::string>> dictionary;
 }
 
 void printTimeASCII(){
