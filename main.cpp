@@ -21,9 +21,9 @@ int main() {
   std::string currentTime = "";
   while (!end) {
     // Get current hour
-    currentTime = "000";
+    currentTime = "123";
     // Print current hour
-    printTimeASCII(dictionaryASCII, currentTime);
+    printTimeASCII(dictionaryASCII, currentTime.c_str());
 
     // clean screen
 
@@ -37,19 +37,26 @@ std::map<std::string, std::vector<std::string>> loadDictionaryASCII(
     std::string dictionaryDirectoryPath) {
   // inits map
   std::map<std::string, std::vector<std::string>> dictionary;
+  const std::string TXT_FORMAT = ".txt";
 
   // Read Dictionary folder content
   DIR *dp;
   struct dirent *ep;
-  dp = opendir("./DictionaryASCII/");
+  dp = opendir(dictionaryDirectoryPath.c_str());
 
   if (dp != NULL) {
     while (ep = readdir(dp)) {
       std::string fileName = ep->d_name;
-      std::string filePath = dictionaryDirectoryPath + "/" + fileName;
-      std::vector<std::string> currentFileContent = readFile(filePath);
-      dictionary.insert(std::pair<std::string, std::vector<std::string>>(
-          fileName, currentFileContent));
+      int txtFormatPosition = fileName.find(TXT_FORMAT);
+      if (txtFormatPosition != -1) {
+        std::string filePath = dictionaryDirectoryPath + fileName;
+
+        std::vector<std::string> currentFileContent = readFile(filePath);
+
+        fileName = fileName.substr(0, txtFormatPosition);
+        dictionary.insert(std::pair<std::string, std::vector<std::string>>(
+            fileName, currentFileContent));
+      }
     }
     (void)closedir(dp);
 
@@ -87,8 +94,10 @@ void printTimeASCII(std::map<std::string, std::vector<std::string>> &dictionary,
   std::string line;
   for (int i = 0; i < letterLength; i++) {
     line = "";
-    for (char &c : currentTime) {
-      line += dictionary.find("e")->second.at(i);
+    for (int j = 0; j < currentTime.size(); j++) {
+      std::string charAsString;
+      charAsString.push_back(currentTime[j]);
+      line.append(dictionary.find(charAsString)->second[i]);
     }
     printf("%s\n", line.c_str());
   }
