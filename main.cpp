@@ -1,17 +1,17 @@
 #include <iostream>
 #include <string>
-#include <list>
+#include <vector>
 #include <map>
 #include <fstream>
 
 //Declare methods
-std::map<std::string, std::list<std::string>> loadDictionaryASCII(std::string dictionaryPath);
-std::list<std::string> readFile(std::string filePath);
+std::map<std::string, std::vector<std::string>> loadDictionaryASCII(std::string dictionaryPath);
+std::vector<std::string> readFile(std::string filePath);
 void printTimeASCII();
 
 int main(){
     //Init Load ASCII Dictionary
-    std::map<std::string, std::list<std::string>> dictionaryASCII = loadDictionaryASCII("../Number0.txt");
+    std::map<std::string, std::vector<std::string>> dictionaryASCII = loadDictionaryASCII("./Dictionary");
 
     readFile("./DictionaryASCII/Number0.txt");
     int cont=10;
@@ -31,9 +31,9 @@ int main(){
     return 0;
 }
 
-std::map<std::string, std::list<std::string>> loadDictionaryASCII(std::string dictionaryDirectoryPath){
+std::map<std::string, std::vector<std::string>> loadDictionaryASCII(std::string dictionaryDirectoryPath){
     //inits map
-    std::map<std::string, std::list<std::string>> dictionary;
+    std::map<std::string, std::vector<std::string>> dictionary;
    
    //read all files from dictionary directory
   
@@ -42,8 +42,8 @@ std::map<std::string, std::list<std::string>> loadDictionaryASCII(std::string di
 }
 
 
-std::list<std::string> readFile(std::string filePath){
-    std::list<std::string> fileContent;
+std::vector<std::string> readFile(std::string filePath){
+    std::vector<std::string> fileContent;
     std::ifstream fileStream;
 
     fileStream.open(filePath);
