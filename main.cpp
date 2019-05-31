@@ -1,3 +1,4 @@
+#include <conio.h>
 #include <dirent.h>
 #include <time.h>
 #include <fstream>
@@ -24,13 +25,18 @@ int main() {
 
   bool end = false;
   std::string currentTime = "";
+
   while (!end) {
     // Get current hour
     currentTime = getCurrentTimeString();
+
+    // clean screen
+    system("CLS");
+
     // Print current hour
     printTimeASCII(dictionaryASCII, currentTime.c_str());
 
-    // clean screen
+    // Sleps
 
     end = true;
   }
@@ -98,7 +104,42 @@ std::vector<std::string> readFile(std::string filePath) {
   return fileContent;
 }
 
-std::string getCurrentTimeString() { return "78:99"; }
+std::string getCurrentTimeString() {
+  // Gets current time
+  time_t theTime = time(NULL);
+  struct tm *aTime = localtime(&theTime);
+
+  // Splits time
+  int day = aTime->tm_mday;
+  int month = aTime->tm_mon +
+              1;  // Month is 0 – 11, add 1 to get a jan-dec 1-12 concept
+  int year = aTime->tm_year + 1900;  // Year is # years since 1900
+  // Parse string
+  std::string hour = std::to_string(aTime->tm_hour);
+  std::string min = std::to_string(aTime->tm_min);
+  std::string sec = std::to_string(aTime->tm_sec);
+
+  // Adds a 0 to the left in case there is only one digit
+  if (hour.size() == 1) {
+    hour = '0' + hour;
+  }
+  if (min.size() == 1) {
+    min = '0' + min;
+  }
+  if (sec.size() == 1) {
+    sec = '0' + sec;
+  }
+
+  // Concats the final time
+  std::string stringTime;
+  stringTime.append(hour)
+      .append(COLON_CHARACTER)
+      .append(min)
+      .append(COLON_CHARACTER)
+      .append(sec);
+
+  return stringTime;
+}
 
 void printTimeASCII(std::map<std::string, std::vector<std::string>> &dictionary,
                     std::string currentTime) {
