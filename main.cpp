@@ -7,6 +7,13 @@
 #include <string>
 #include <vector>
 
+#ifdef __unix__
+#include <unistd.h>
+#elif defined _WIN32
+#include <windows.h>
+#define sleep(x) Sleep(1000 * (x))
+#endif
+
 const std::string COLON_CHARACTER = ":";
 const std::string COLON_FILE_NAME = "Colon";
 
@@ -23,10 +30,9 @@ int main() {
   std::map<std::string, std::vector<std::string>> dictionaryASCII =
       loadDictionaryASCII("./DictionaryASCII/");
 
-  bool end = false;
   std::string currentTime = "";
 
-  while (!end) {
+  while (true) {
     // Get current hour
     currentTime = getCurrentTimeString();
 
@@ -36,9 +42,8 @@ int main() {
     // Print current hour
     printTimeASCII(dictionaryASCII, currentTime.c_str());
 
-    // Sleps
-
-    end = true;
+    // Sleps for 1 second
+    sleep(1);
   }
 
   return 0;
