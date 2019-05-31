@@ -1,14 +1,19 @@
 #include <dirent.h>
+#include <time.h>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
 
+const std::string COLON_CHARACTER = ":";
+const std::string COLON_FILE_NAME = "Colon";
+
 // Declare methods
 std::map<std::string, std::vector<std::string>> loadDictionaryASCII(
     std::string dictionaryPath);
 std::vector<std::string> readFile(std::string filePath);
+std::string getCurrentTimeString();
 void printTimeASCII(std::map<std::string, std::vector<std::string>> &dictionary,
                     std::string currentTime);
 
@@ -21,7 +26,7 @@ int main() {
   std::string currentTime = "";
   while (!end) {
     // Get current hour
-    currentTime = "123";
+    currentTime = getCurrentTimeString();
     // Print current hour
     printTimeASCII(dictionaryASCII, currentTime.c_str());
 
@@ -51,9 +56,16 @@ std::map<std::string, std::vector<std::string>> loadDictionaryASCII(
       if (txtFormatPosition != -1) {
         std::string filePath = dictionaryDirectoryPath + fileName;
 
+        // Get file content
         std::vector<std::string> currentFileContent = readFile(filePath);
 
+        // insert into map
         fileName = fileName.substr(0, txtFormatPosition);
+
+        if (fileName.compare(COLON_FILE_NAME) == 0) {
+          fileName = COLON_CHARACTER;
+        }
+
         dictionary.insert(std::pair<std::string, std::vector<std::string>>(
             fileName, currentFileContent));
       }
@@ -63,7 +75,7 @@ std::map<std::string, std::vector<std::string>> loadDictionaryASCII(
   } else {
     perror("Couldn't open the directory");
   }
-
+  // return map
   return dictionary;
 }
 
@@ -86,17 +98,24 @@ std::vector<std::string> readFile(std::string filePath) {
   return fileContent;
 }
 
+std::string getCurrentTimeString() { return "78:99"; }
+
 void printTimeASCII(std::map<std::string, std::vector<std::string>> &dictionary,
                     std::string currentTime) {
   // Get length of each letter
   int letterLength = dictionary.begin()->second.size();
 
   std::string line;
+  //
   for (int i = 0; i < letterLength; i++) {
     line = "";
     for (int j = 0; j < currentTime.size(); j++) {
       std::string charAsString;
       charAsString.push_back(currentTime[j]);
+
+      // std::cout << dictionary.find(charAsString)->first << "  -->  "
+
+      //         << dictionary.find(charAsString)->second[i] << std::endl;
       line.append(dictionary.find(charAsString)->second[i]);
     }
     printf("%s\n", line.c_str());
