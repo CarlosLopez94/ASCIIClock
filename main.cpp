@@ -32,6 +32,8 @@ int main() {
 
   std::string currentTime = "";
 
+  printf("Presh any button to start...");
+  std::cin.ignore();
   while (true) {
     // Get current hour
     currentTime = getCurrentTimeString();
@@ -159,9 +161,6 @@ void printTimeASCII(std::map<std::string, std::vector<std::string>> &dictionary,
       std::string charAsString;
       charAsString.push_back(currentTime[j]);
 
-      // std::cout << dictionary.find(charAsString)->first << "  -->  "
-
-      //         << dictionary.find(charAsString)->second[i] << std::endl;
       line.append(dictionary.find(charAsString)->second[i]);
     }
     printf("%s\n", line.c_str());
