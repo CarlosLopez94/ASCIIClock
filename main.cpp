@@ -14,10 +14,13 @@
 #define sleep(x) Sleep(1000 * (x))
 #endif
 
+const std::string TXT_FORMAT = ".txt";
 const std::string COLON_CHARACTER = ":";
 const std::string COLON_FILE_NAME = "Colon";
 
 // Declare methods
+std::vector<std::string> getFilesOnDirectory(std::string directoryPath);
+
 std::string getChoosedDictionaryPath();
 std::map<std::string, std::vector<std::string>> loadDictionaryASCII(
     std::string dictionaryPath);
@@ -27,6 +30,8 @@ void printTimeASCII(std::map<std::string, std::vector<std::string>> &dictionary,
                     std::string currentTime);
 
 int main() {
+  getFilesOnDirectory("./ASCIIDictionaries/");
+
   // Choose dictionaryPath
   std::string dictionaryPath = getChoosedDictionaryPath();
 
@@ -60,6 +65,29 @@ int main() {
   return 0;
 }
 
+std::vector<std::string> getFilesOnDirectory(std::string directoryPath) {
+  std::vector<std::string> files;
+  DIR *dp;
+  struct dirent *ep;
+  dp = opendir(directoryPath.c_str());
+
+  if (dp != NULL) {
+    while (ep = readdir(dp)) {
+      std::string fileName = ep->d_name;
+      // Remove 'currentDirectory' and 'ParentDirectory' from the list
+      if (fileName.compare(".") != 0 && fileName.compare("..") != 0) {
+        // save the filenames
+        files.push_back(fileName);
+      }
+    }
+    (void)closedir(dp);
+  } else {
+    perror("Couldn't open the directory");
+  }
+
+  return files;
+}
+
 std::string getChoosedDictionaryPath() {
   std::string dictionaryPath;
   do {
@@ -87,38 +115,27 @@ std::map<std::string, std::vector<std::string>> loadDictionaryASCII(
     std::string dictionaryDirectoryPath) {
   // inits map
   std::map<std::string, std::vector<std::string>> dictionary;
-  const std::string TXT_FORMAT = ".txt";
 
   // Read Dictionary folder content
-  DIR *dp;
-  struct dirent *ep;
-  dp = opendir(dictionaryDirectoryPath.c_str());
+  std::vector<std::string> dictionaryFiles =
+      getFilesNamesOnDirectory(dictionaryDirectoryPath);
 
-  if (dp != NULL) {
-    while (ep = readdir(dp)) {
-      std::string fileName = ep->d_name;
-      int txtFormatPosition = fileName.find(TXT_FORMAT);
-      if (txtFormatPosition != -1) {
-        std::string filePath = dictionaryDirectoryPath + fileName;
+  for (std::string fileName : dictionaryFiles) {
+    std::string filePath = dictionaryDirectoryPath + fileName;
+    // Get file content
 
-        // Get file content
-        std::vector<std::string> currentFileContent = readFile(filePath);
+    std::vector<std::string> currentFileContent = readFile(filePath);
 
-        // insert into map
-        fileName = fileName.substr(0, txtFormatPosition);
+    // insert into map
+    int txtFormatPosition = fileName.find(TXT_FORMAT);
+    fileName = fileName.substr(0, txtFormatPosition);
 
-        if (fileName.compare(COLON_FILE_NAME) == 0) {
-          fileName = COLON_CHARACTER;
-        }
-
-        dictionary.insert(std::pair<std::string, std::vector<std::string>>(
-            fileName, currentFileContent));
-      }
+    if (fileName.compare(COLON_FILE_NAME) == 0) {
+      fileName = COLON_CHARACTER;
     }
-    (void)closedir(dp);
 
-  } else {
-    perror("Couldn't open the directory");
+    dictionary.insert(std::pair<std::string, std::vector<std::string>>(
+        fileName, currentFileContent));
   }
   // return map
   return dictionary;
