@@ -14,6 +14,7 @@
 #define sleep(x) Sleep(1000 * (x))
 #endif
 
+const std::string DICTIONARIES_PATH = "./ASCIIDictionaries/";
 const std::string TXT_FORMAT = ".txt";
 const std::string COLON_CHARACTER = ":";
 const std::string COLON_FILE_NAME = "Colon";
@@ -30,8 +31,6 @@ void printTimeASCII(std::map<std::string, std::vector<std::string>> &dictionary,
                     std::string currentTime);
 
 int main() {
-  getFilesOnDirectory("./ASCIIDictionaries/");
-
   // Choose dictionaryPath
   std::string dictionaryPath = getChoosedDictionaryPath();
 
@@ -76,6 +75,7 @@ std::vector<std::string> getFilesOnDirectory(std::string directoryPath) {
       std::string fileName = ep->d_name;
       // Remove 'currentDirectory' and 'ParentDirectory' from the list
       if (fileName.compare(".") != 0 && fileName.compare("..") != 0) {
+        std::cout << fileName << std::endl;
         // save the filenames
         files.push_back(fileName);
       }
@@ -90,21 +90,30 @@ std::vector<std::string> getFilesOnDirectory(std::string directoryPath) {
 
 std::string getChoosedDictionaryPath() {
   std::string dictionaryPath;
+
+  std::vector<std::string> dictionaries =
+      getFilesOnDirectory(DICTIONARIES_PATH);
+
   do {
-    printf("Choose your Dictionary: \n[1] Classic \n[2] 3D\n");
+    printf("Choose your Dictionary:\n");
+    for (int i = 0; i < dictionaries.size(); i++) {
+      printf("[%d] %s\n", i, dictionaries[i].c_str());
+    }
     int choosedDictionary;
     std::cin >> choosedDictionary;
-    switch (choosedDictionary) {
-      case 1:
-        dictionaryPath = "./DictionaryASCII_Classic/";
-        break;
-      case 2:
-        dictionaryPath = "./DictionaryASCII_3D/";
-        break;
-      default:
-        printf("'%d' IS NOT a possible value... Try again.\n",
-               choosedDictionary);
-        break;
+    if (choosedDictionary >= 0 && choosedDictionary < dictionaries.size()) {
+      dictionaryPath = "./";
+      dictionaryPath += DICTIONARIES_PATH;
+      dictionaryPath += "/";
+      dictionaryPath += dictionaries[choosedDictionary].c_str();
+      dictionaryPath += "/";
+
+      std::cout << "path: " << dictionaryPath;
+    } else {
+      printf(
+          "'%d' IS NOT a possible value... Try again with a number from 0 to "
+          "%d.\n",
+          choosedDictionary, dictionaries.size() - 1);
     }
   } while (dictionaryPath.size() < 1);
 
@@ -118,7 +127,7 @@ std::map<std::string, std::vector<std::string>> loadDictionaryASCII(
 
   // Read Dictionary folder content
   std::vector<std::string> dictionaryFiles =
-      getFilesNamesOnDirectory(dictionaryDirectoryPath);
+      getFilesOnDirectory(dictionaryDirectoryPath);
 
   for (std::string fileName : dictionaryFiles) {
     std::string filePath = dictionaryDirectoryPath + fileName;
