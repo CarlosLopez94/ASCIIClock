@@ -75,7 +75,6 @@ std::vector<std::string> getFilesOnDirectory(std::string directoryPath) {
       std::string fileName = ep->d_name;
       // Remove 'currentDirectory' and 'ParentDirectory' from the list
       if (fileName.compare(".") != 0 && fileName.compare("..") != 0) {
-        std::cout << fileName << std::endl;
         // save the filenames
         files.push_back(fileName);
       }
@@ -107,11 +106,10 @@ std::string getChoosedDictionaryPath() {
       dictionaryPath += "/";
       dictionaryPath += dictionaries[choosedDictionary].c_str();
       dictionaryPath += "/";
-
-      std::cout << "path: " << dictionaryPath;
     } else {
       printf(
-          "'%d' IS NOT a possible value... Try again with a number from 0 to "
+          "'%d' IS NOT a possible value... Try again choosing a number from 0 "
+          "to "
           "%d.\n",
           choosedDictionary, dictionaries.size() - 1);
     }
