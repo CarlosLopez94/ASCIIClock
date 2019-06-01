@@ -36,8 +36,13 @@ int main() {
 
   std::string currentTime = "";
 
-  printf("Presh any button to start...");
-  std::cin.ignore();
+  // Wait until user input
+  printf("\nPresh 'Enter' to Start!!\n");
+  std::cin.clear();
+  fflush(stdin);
+  std::cin.get();  // waits for 'Enter' key
+
+  // Initinite loop, Starts execution
   while (true) {
     // Get current hour
     currentTime = getCurrentTimeString();
@@ -144,10 +149,9 @@ std::string getCurrentTimeString() {
   struct tm *aTime = localtime(&theTime);
 
   // Splits time
-  int day = aTime->tm_mday;
-  int month = aTime->tm_mon +
-              1;  // Month is 0 – 11, add 1 to get a jan-dec 1-12 concept
-  int year = aTime->tm_year + 1900;  // Year is # years since 1900
+  // int day = aTime->tm_mday;
+  // int month = aTime->tm_mon +1; // Month is 0 – 11, add 1 to get 1-12
+  // int year = aTime->tm_year + 1900;  // Year starts at 1900
   // Parse string
   std::string hour = std::to_string(aTime->tm_hour);
   std::string min = std::to_string(aTime->tm_min);
