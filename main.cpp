@@ -18,6 +18,7 @@ const std::string COLON_CHARACTER = ":";
 const std::string COLON_FILE_NAME = "Colon";
 
 // Declare methods
+std::string getChoosedDictionaryPath();
 std::map<std::string, std::vector<std::string>> loadDictionaryASCII(
     std::string dictionaryPath);
 std::vector<std::string> readFile(std::string filePath);
@@ -26,9 +27,12 @@ void printTimeASCII(std::map<std::string, std::vector<std::string>> &dictionary,
                     std::string currentTime);
 
 int main() {
+  // Choose dictionaryPath
+  std::string dictionaryPath = getChoosedDictionaryPath();
+
   // Init Load ASCII Dictionary
   std::map<std::string, std::vector<std::string>> dictionaryASCII =
-      loadDictionaryASCII("./DictionaryASCII/");
+      loadDictionaryASCII(dictionaryPath);
 
   std::string currentTime = "";
 
@@ -49,6 +53,29 @@ int main() {
   }
 
   return 0;
+}
+
+std::string getChoosedDictionaryPath() {
+  std::string dictionaryPath;
+  do {
+    printf("Choose your Dictionary: \n[1] Classic \n[2] 3D\n");
+    int choosedDictionary;
+    std::cin >> choosedDictionary;
+    switch (choosedDictionary) {
+      case 1:
+        dictionaryPath = "./DictionaryASCII_Classic/";
+        break;
+      case 2:
+        dictionaryPath = "./DictionaryASCII_3D/";
+        break;
+      default:
+        printf("'%d' IS NOT a possible value... Try again.\n",
+               choosedDictionary);
+        break;
+    }
+  } while (dictionaryPath.size() < 1);
+
+  return dictionaryPath;
 }
 
 std::map<std::string, std::vector<std::string>> loadDictionaryASCII(
